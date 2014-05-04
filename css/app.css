@@ -15,7 +15,7 @@ body, h1, h2, h3 {
 
 @font-face {
     font-family: 'open_sansregular';
-    src: url('../fonts/opensans_regular_macroman/OpenSans-Regular-webfont.woff') format('woff');
+    src: url('app://onappnw/css/OpenSans-Regular-webfont.woff') format('woff');
     font-weight: normal;
     font-style: normal;
 }
