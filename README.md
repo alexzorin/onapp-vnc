@@ -2,7 +2,7 @@
 
 `node-webkit` application for logging in to your OnApp virtual machines' VNC consoles using only JavaScript and `<canvas>`.
 
-![http://i.imgur.com/pLrUkY2.gif]
+![gif](http://i.imgur.com/pLrUkY2.gif)
 
 ## Caveats/TODOs
 
