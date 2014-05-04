@@ -1,0 +1,21 @@
+<div class="console-screen" ng-show="loading === false">
+	<div class="row" ng-show="error != null">
+		<div class="columns small-12">
+			<div class="warning round alert-box">{{error}}</div>
+		</div>
+	</div>
+	<div class="row">
+		<a class="button tiny" ui-sref="main">Back to list</a>
+	</div>
+	<div class="row">
+		<vnc session="ras"></vnc>
+	</div>
+	<div class="row">
+		<p>
+			<small>Blank screen? Probably the VNC proxy is broken, try rebooting the VM.</small>
+		</p>
+	</div>
+</div>
+<div class="console-screen" ng-show="loading === true">
+	<loader message="loadingMsg" description="'This should only take a second'"/>
+</div>

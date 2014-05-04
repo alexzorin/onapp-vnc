@@ -1,0 +1,40 @@
+<div class="main-screen" ng-show="loading === false">
+	<div class="row">
+		<h1>Welcome</h1>	
+		<p ng-show="vms.length > 0">Select which virtual machine you would like remote access to below</p>
+		<p ng-show="vms.length === 0">You have no virtual machines!</p>
+	</div>
+	<div class="row" ng-show="error != null">
+		<div class="columns small-12">
+			<div class="warning round alert-box">{{error}}</div>
+		</div>
+	</div>
+	<div class="row">
+		<form ng-submit="formGo()">
+			<input type="text" focus-me="true" class="vmFilter" ng-model="vmFilterTerm" placeholder="Filter by label or hostname ..."/>
+		</form>
+	</div>
+	<div class="row">
+		<table>
+			<thead>
+				<tr>
+					<th colspan="3">Virtual Machines</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="vm in vms | filter: vmFilter">
+					<td>{{vm.label}}</td>
+					<td>{{vm.hostname}}</td>
+					<td><button class="button tiny" ng-click="go(vm)">Go!</button></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="row">
+		<p><small>Don't see your virtual machine in the list? <a ng-click="reloadVms()">Sounds like it's reload-o-clock.</a></small></p>
+		<p><small>Want to <a ng-click="logout()">logout/remove traces of your credentials</a>? I don't trust me either.</small></p>
+	</div>
+</div>
+<div class="welcome-screen" ng-show="loading === true">
+	<loader message="'Loading your virtual machines ... this can take a while'" description="'... but luckily we only need to do it once'"/>
+</div>

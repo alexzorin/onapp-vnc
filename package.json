@@ -1,0 +1,17 @@
+{
+  "name": "onapp-nw",
+  "main": "app://onappnw/index.html",
+  "window": {
+    "frame": false,
+    "toolbar": false,
+    "min_height": 800,
+    "min_width": 1000,
+    "height": 800,
+    "width": 1000
+  },
+  "dependencies": {
+    "connect": "~2.14.5",
+    "ws": "~0.4.31"
+  },
+  "chromium-args": "--enable-threaded-compositing"
+}

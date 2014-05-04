@@ -1,0 +1,43 @@
+<div class="welcome-screen" ng-show="loading === false">
+	<div class="row">
+		<div class="small-12 columns">
+			<h1>OnApp VNC <small>Please login</small></h1>	
+		</div>
+	</div>
+	<div class="row" ng-show="error != null">
+		<div class="columns small-12">
+			<div class="warning round alert-box">{{error}}</div>
+		</div>
+	</div>
+	<!-- login form -->
+	<form ng-submit="doLogin()">
+		<div class="row">
+			<div class="large-6 columns">
+				<label>Email Address:</label>
+				<input type="email" ng-model="email" required>		
+			</div>
+			<div class="large-6 columns">
+				<label>API Key:</label>
+				<input type="password" ng-model="apiKey" required/>
+			</div>
+		</div>
+		<div class="row">
+			<div class="small-12 columns">
+				<input type="text" ng-model="host" placeholder="Hostname" required/>
+			</div>
+		</div>
+		<div class="row">
+			<div class="small-12 columns">
+				<input class="small button" type="submit" value="Login">
+			</div>
+		</div>
+	</form>
+	<div class="row">
+		<div class="columns">
+			<p>You can find these details on your <a href="#" ng-click="openProfilePage()">profile page</a> in the dashboard.</p>
+		</div>
+	</div>
+</div>
+<div class="welcome-screen" ng-show="loading === true">
+	<loader message="'Logging you in ...'"/>
+</div>
