@@ -10,7 +10,6 @@
     "width": 1000
   },
   "dependencies": {
-    "connect": "~2.14.5",
     "ws": "~0.4.31"
   },
   "chromium-args": "--enable-threaded-compositing"

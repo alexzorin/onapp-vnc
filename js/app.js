@@ -361,7 +361,6 @@ app.service("vncProxy", ["login", function(login) {
 	// Return this factory function to consumers
 	return function(ras) {
 		var tcpProxy = function(vnc) {
-			// This is the socket.io connect handler
 			return function(socket){
 				// create tcp connection to VNC server
 				var ts = Net.connect(vnc, function(){
