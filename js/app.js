@@ -318,7 +318,30 @@ app.controller("ConsoleCtrl", ["$scope", "$state", "$stateParams", "api", functi
 	});
 }]);
 
-app.directive("vnc", ["vncProxy", function(vncProxy) {
+app.service("rfb", function() {
+	var canv = document.createElement("canvas");
+	var rfb = new RFB({
+		"target": canv,
+		"encrypt": false,
+		"local_cursor": true,
+		"width": 800,
+		"height": 600
+	});
+	window.rfb = rfb;
+	return {
+		GetElement: function() {
+			return canv;
+		},
+		Connect: function(password) {
+			return rfb.connect("localhost", 9876, password, "/");
+		},
+		Disconnect: function() {
+			rfb.disconnect();
+		}
+	}
+});
+
+app.directive("vnc", ["vncProxy", "rfb", function(vncProxy, rfb) {
 	return {
 		restrict: "E",
 		templateUrl: "app://onappnw/tpl/directives/vnc.html",
@@ -330,23 +353,17 @@ app.directive("vnc", ["vncProxy", function(vncProxy) {
 				if(typeof(scope.ras) === "undefined") {
 					return;
 				}
-				var canv = element[0].querySelector("canvas");
+				var canv = rfb.GetElement();
+				element[0].appendChild(canv);
+
 				var proxy = vncProxy(scope.ras);
 
-				var rfb = new RFB({
-					"target": canv,
-					"encrypt": false,
-					"local_cursor": true,
-					"onPasswordRequired": function(r) {
-						console.log("want password", r);
-					}
-				});
-				rfb.connect("localhost", 9876, scope.ras.password, "/");
+				rfb.Connect(scope.ras.password);
 
 				scope.$on("$destroy", function() {
-					rfb.disconnect();
+					rfb.Disconnect();
 					proxy.destroy();
-					canv.remove();
+					element[0].removeChild(canv);
 				});
 			});
 		}
