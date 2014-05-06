@@ -338,7 +338,7 @@ app.service("rfb", function() {
 		Disconnect: function() {
 			rfb.disconnect();
 		}
-	}
+	};
 });
 
 app.directive("vnc", ["vncProxy", "rfb", function(vncProxy, rfb) {
@@ -357,12 +357,15 @@ app.directive("vnc", ["vncProxy", "rfb", function(vncProxy, rfb) {
 				element[0].appendChild(canv);
 
 				var proxy = vncProxy(scope.ras);
-
-				rfb.Connect(scope.ras.password);
-
+				proxy.Listen().then(function() {
+					rfb.Connect(scope.ras.password);
+				}, function(err) {
+					window.alert("Unable to connect to the websocket proxy");
+					console.log(err);
+				});
 				scope.$on("$destroy", function() {
 					rfb.Disconnect();
-					proxy.destroy();
+					proxy.Destroy();
 					element[0].removeChild(canv);
 				});
 			});
@@ -370,7 +373,7 @@ app.directive("vnc", ["vncProxy", "rfb", function(vncProxy, rfb) {
 	};
 }]);
 
-app.service("vncProxy", ["login", function(login) {
+app.service("vncProxy", ["$q", "login", function($q, login) {
 	var Net = require("net"),
 		Buffer = require("buffer").Buffer,
 		Fs = require("fs");
@@ -406,7 +409,7 @@ app.service("vncProxy", ["login", function(login) {
 					socket.on('close', function(){
 						ts.end();
 					});
-					socket.on('error', function(){
+					socket.on('error', function(err){
 						ts.end();
 					});
 					
@@ -460,7 +463,8 @@ app.service("vncProxy", ["login", function(login) {
 
 		var WebsocketServer = require("ws").Server;
 		var wsSrv = new WebsocketServer({
-			port: 9876
+			port: 9876,
+			host: "127.0.0.1"
 		});
 		hostUri = require("url").parse(login.GetHost());
 		wsSrv.on("connection", tcpProxy({
@@ -469,7 +473,19 @@ app.service("vncProxy", ["login", function(login) {
 		}));
 
 		return {
-			destroy: function() {
+			Listen: function() {
+				var def = $q.defer();
+				var sock = new Net.Socket();
+				sock.connect(9876, "localhost", function() {
+					sock.destroy();
+					def.resolve(null);
+				});
+				sock.on("error", function(e) {
+					def.reject(e);
+				});
+				return def.promise;
+			},
+			Destroy: function() {
 				console.log("Cleaning up proxy server");
 				wsSrv.close();
 				wsSrv = null;
